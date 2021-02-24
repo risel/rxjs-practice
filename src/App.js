@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useRef } from "react";
+import { fromEvent } from "rxjs";
 
 function App() {
+  const targetRef = useRef(null);
+  const observer = (value) => {
+    console.log(value);
+  };
+  useEffect(() => {
+    fromEvent(targetRef.current, "click")
+      .subscribe(observer);
+  },[]);
+
+  const fetchList = (number) => {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${number}`)
+      .then(response => response.json())
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div ref={targetRef}>
+      something
     </div>
   );
 }
