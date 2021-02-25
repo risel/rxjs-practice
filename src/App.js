@@ -1,24 +1,24 @@
-import { useEffect, useRef } from "react";
-import { fromEvent } from "rxjs";
+import { useEffect, useRef, useState } from "react";
+import { of } from "rxjs";
+
+const source = [ "Dante", "Peter", "James"];
+const names$ = of(source);
 
 function App() {
-  const targetRef = useRef(null);
-  const observer = (value) => {
-    console.log(value);
-  };
+  const [names, setNames] = useState();
   useEffect(() => {
-    fromEvent(targetRef.current, "click")
-      .subscribe(observer);
-  },[]);
+    const subscription = names$.subscribe(setNames);
 
-  const fetchList = (number) => {
-    fetch(`https://jsonplaceholder.typicode.com/todos/${number}`)
-      .then(response => response.json())
-  };
-
+    return () => subscription.unsubscribe();
+  },[]);  
+  const handleList = () => {
+    return names.map((item) => {
+      return <div>{item}</div>
+    })
+  }
   return (
-    <div ref={targetRef}>
-      something
+    <div>
+      {handleList}
     </div>
   );
 }
